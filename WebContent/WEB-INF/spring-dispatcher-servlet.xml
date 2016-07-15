@@ -33,4 +33,11 @@
 	 class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basename" value="/WEB-INF/messages" />
 	</bean>
+	
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/login"/>
+			<bean class="com.opinta.service.DayOfWeekInterceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
 </beans>

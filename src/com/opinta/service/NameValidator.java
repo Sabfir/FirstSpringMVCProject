@@ -17,7 +17,6 @@ public class NameValidator implements ConstraintValidator<IsValidName, String>{
 		if (name.substring(0, 4).matches("Mr. |Ms. ")) {
 			nameFound = name.substring(4);
 		}
-		System.out.println("name:" + nameFound);
 		
 		if (nameFound.isEmpty()) {
 			return false;
