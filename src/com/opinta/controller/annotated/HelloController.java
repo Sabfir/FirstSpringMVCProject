@@ -1,8 +1,18 @@
 package com.opinta.controller.annotated;
 
+import java.beans.PropertyEditorSupport;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
+import javax.validation.Valid;
+
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,9 +21,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.opinta.model.Student;
+import com.opinta.service.StudentNameEditor;
 
 @Controller
 public class HelloController {
+	
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		// forbid fill this fields from the view by autobinding using ModelAttribute
+		binder.setDisallowedFields("IQ");
+		
+		// defining format recognition for date input
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy*mm*dd");
+		CustomDateEditor customDateEditor = new CustomDateEditor(dateFormat, true);
+		binder.registerCustomEditor(Date.class, "DOB", customDateEditor);
+		// check name with our editor
+		PropertyEditorSupport nameEditor = new StudentNameEditor();
+		binder.registerCustomEditor(String.class, "name", nameEditor);
+	}
 	
 //	Test Path variable
 //	getting parameters from the url
@@ -31,6 +56,8 @@ public class HelloController {
 	public ModelAndView OpenLoginPage() {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("LoginPage");
+		// we don't need code above because we use common model attribute in addCommonObject
+//		modelAndView.addObject("topmessage", "Here is my simple Spring MVC");
 		
 		return modelAndView;
 	}
@@ -38,11 +65,9 @@ public class HelloController {
 //	Test Request parameters
 //	getting parameters from the body
 	@RequestMapping(value="/submitLogin", method=RequestMethod.POST)
-	public ModelAndView SubmitLogin(@RequestParam(value="name") String name,
-									@RequestParam(value="hobby") String hobby) {
+	public ModelAndView SubmitLogin(@RequestParam(value="name") String name) {
 		Student student = new Student();
 		student.setName(name);
-		student.setHobby(hobby);
 		
 		ModelAndView modelAndView = new ModelAndView("WelcomePage");
 		modelAndView.addObject("student", student);
@@ -54,10 +79,27 @@ public class HelloController {
 //	getting parameters from the body directly to the model
 //	explicit passing parameters to the view 
 	@RequestMapping(value="/submitLoginUsingModelAttribute", method=RequestMethod.POST)
-	public ModelAndView SubmitLogin(@ModelAttribute(value="student") Student student) {
-		ModelAndView modelAndView = new ModelAndView("WelcomePage");
+	public ModelAndView SubmitLogin(@Valid @ModelAttribute(value="student") Student student, BindingResult result) {
+		ModelAndView modelAndView = new ModelAndView();
+		
+		if (result.hasErrors()) {
+			modelAndView.setViewName("LoginPage");
+		} else {
+			modelAndView.setViewName("WelcomePage");
+		}
+		
+		// we don't need code above because we use common model attribute in addCommonObject
+//		modelAndView.addObject("topmessage", "Here is my simple Spring MVC");
 		
 		return modelAndView;
 	}
-
+	
+//	Add Common Model Attribute
+//	if we have model attribute that repeats in every method,
+//	then we can add it to the method with @ModelAttribute
+//	Spring MVC call this method before each controller
+	@ModelAttribute
+	public void addCommonObject(Model model) {
+		model.addAttribute("topmessage", "Here is my simple Spring MVC");
+	}
 }
