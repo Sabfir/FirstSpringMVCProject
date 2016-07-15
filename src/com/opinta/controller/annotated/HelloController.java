@@ -28,11 +28,11 @@ public class HelloController {
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		// forbid fill this fields from the view by autobinding using ModelAttribute
-		binder.setDisallowedFields("IQ");
+//		// forbid fill this fields from the view by autobinding using ModelAttribute
+//		binder.setDisallowedFields("IQ");
 		
 		// defining format recognition for date input
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy*mm*dd");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy*MM*dd");
 		CustomDateEditor customDateEditor = new CustomDateEditor(dateFormat, true);
 		binder.registerCustomEditor(Date.class, "DOB", customDateEditor);
 		// check name with our editor

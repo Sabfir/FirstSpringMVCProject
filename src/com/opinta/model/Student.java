@@ -3,14 +3,23 @@ package com.opinta.model;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import com.opinta.service.IsValidName;
 
 public class Student {
 	@Size(min=5, max=15
 //			, message="please enter the name with the length between {min} and {max} characters"
 			)
+	@Pattern(regexp="[^0-9]*")
+	@IsValidName(listOfNames="Oleg|Oleh|Sabfir|Sab|Olya|Ola|O|S")
 	private String name;
+	@Past
 	private Date DOB;
+	@Max(299)
 	private Integer IQ;
 	private List<String> hobbies;
 	private Address address;
