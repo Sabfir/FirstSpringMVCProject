@@ -39,5 +39,10 @@
 			<mvc:mapping path="/login"/>
 			<bean class="com.opinta.service.DayOfWeekInterceptor"></bean>
 		</mvc:interceptor>
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+			<property name="paramName" value="siteLanguage" />
+		</bean>
 	</mvc:interceptors>
+	
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver" />
 </beans>

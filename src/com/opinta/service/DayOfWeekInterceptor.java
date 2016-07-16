@@ -26,12 +26,12 @@ public class DayOfWeekInterceptor extends HandlerInterceptorAdapter{
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response,
 			Object handler, ModelAndView modelAndView) {
-		System.out.println("postHandler");
+//		System.out.println("postHandler");
 	}
 	
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
 			Object handler, Exception ex) throws Exception {
-		System.out.println("afterCompletion");
+//		System.out.println("afterCompletion");
 	}
 }
